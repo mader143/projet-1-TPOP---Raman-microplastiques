@@ -6,8 +6,8 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 path1 = os.path.join(base_dir, "essai_10min_C2.TXT")
 path2 = os.path.join(base_dir, "essai_10min_C4.TXT")
 path3 = os.path.join(base_dir, "essai_10min_C3_essai2.TXT")
-path4 = os.path.join(base_dir, "ethanol_final.TXT")
-path5 = os.path.join(base_dir, "mercure_prise2.TXT")
+
+path4 = os.path.join(base_dir, "eau_lait_c2.TXT")
 
 #C2
 file1 = open(path1, "r")
@@ -124,31 +124,6 @@ plt.show()
 plt.figure()
 plt.gca().invert_xaxis()
 plt.plot((shift4[500:1300]), (intensite4[500:1300]), label='C3')
-plt.legend()
-plt.xlabel('Raman shift [$cm^{-1}$]')
-plt.ylabel('Intensité [u. ar.]')
-plt.show()
-
-#mercure 2
-file5 = open(path5, "r")
-line5 = file5.readline()
-pixels_données5 = []
-intensite_données5 = []
-
-i = 0
-for line5 in file5:
-    i += 1
-    if i > 0:
-        words = line5.split(",")
-        if len(words) == 3:
-            pixels_données5.append(float(words[1]))
-            intensite_données5.append(float(words[2].replace('\n', '')))
-
-pixels5 = np.array(pixels_données5)
-intensite5 = np.array(intensite_données5)
-
-plt.figure()
-plt.plot((pixels5), (intensite5), label='C3')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')

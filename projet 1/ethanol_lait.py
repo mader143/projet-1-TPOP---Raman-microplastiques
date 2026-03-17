@@ -4,9 +4,9 @@ import os
 
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-path1 = os.path.join(base_dir, "ethanol_1goutte.TXT")
-path2 = os.path.join(base_dir, "ethanol_2gouttes.TXT")
-path3 = os.path.join(base_dir, "ethanol_2gouttes_dilué.TXT")
+path1 = os.path.join(base_dir, "ethanol_1goutte2.TXT")
+path2 = os.path.join(base_dir, "ethanol_3goutte.TXT")
+path3 = os.path.join(base_dir, "ethanol_5goutte.TXT")
 
 #C2
 file1 = open(path1, "r")
