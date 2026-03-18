@@ -7,8 +7,6 @@ path1 = os.path.join(base_dir, "essai_10min_C2.TXT")
 path2 = os.path.join(base_dir, "essai_10min_C4.TXT")
 path3 = os.path.join(base_dir, "essai_10min_C3_essai2.TXT")
 
-path4 = os.path.join(base_dir, "eau_lait_c2.TXT")
-
 #C2
 file1 = open(path1, "r")
 line1 = file1.readline()
@@ -83,30 +81,6 @@ intensite3 = np.array(intensite_données3)
 # print(np.where(intensite == max(intensite[1175:1193]))[0])
 # print(max(intensite[1175:1193]))
 
-#ethanol
-file4 = open(path4, "r")
-line4 = file4.readline()
-pixels_données4 = []
-intensite_données4 = []
-
-i = 0
-for line4 in file4:
-    i += 1
-    if i > 0:
-        words = line4.split(",")
-        if len(words) == 3:
-            pixels_données4.append(float(words[1]))
-            intensite_données4.append(float(words[2].replace('\n', '')))
-
-pixels4 = np.array(pixels_données4)
-intensite4 = np.array(intensite_données4)
-
-I3_norm = (intensite3 - np.min(intensite3))/(np.max(intensite3)-np.min(intensite3))
-I3_norm = (intensite2 - np.min(intensite3))/(np.max(intensite3)-np.min(intensite3))
-
-
-longueurs4 = 0.0738*pixels4 + 621.88
-shift4 = (1/632.8 - 1/longueurs4)*10**7
 longueurs3 = 0.0738*pixels3 + 621.88
 shift3 = (1/632.8 - 1/longueurs3)*10**7
 longueurs2 = 0.0738*pixels2 + 621.88
@@ -120,14 +94,6 @@ plt.gca().invert_xaxis()
 plt.plot((shift3[675:682]), (intensite3[675:682]), label='C3')
 plt.plot((shift2[675:682]), (intensite2[675:682]), label='C4')
 plt.plot((shift[675:682]), (intensite[675:682]), label='C2')
-plt.legend()
-plt.xlabel('Raman shift [$cm^{-1}$]')
-plt.ylabel('Intensité [u. ar.]')
-plt.show()
-
-plt.figure()
-plt.gca().invert_xaxis()
-plt.plot((shift4[675:682]), (intensite4[675:682]-min((intensite4[675:682]))), label='C3')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')
