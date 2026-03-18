@@ -101,6 +101,10 @@ for line4 in file4:
 pixels4 = np.array(pixels_données4)
 intensite4 = np.array(intensite_données4)
 
+I3_norm = (intensite3 - np.min(intensite3))/(np.max(intensite3)-np.min(intensite3))
+I3_norm = (intensite2 - np.min(intensite3))/(np.max(intensite3)-np.min(intensite3))
+
+
 longueurs4 = 0.0738*pixels4 + 621.88
 shift4 = (1/632.8 - 1/longueurs4)*10**7
 longueurs3 = 0.0738*pixels3 + 621.88
@@ -113,9 +117,9 @@ shift = (1/632.8 - 1/longueurs)*10**7
 
 plt.figure()
 plt.gca().invert_xaxis()
-plt.plot((shift3[670:690]), (intensite3[670:690]), label='C3')
-plt.plot((shift2[670:690]), (intensite2[670:690]), label='C4')
-plt.plot((shift[670:690]), (intensite[670:690]), label='C2')
+plt.plot((shift3[675:682]), (intensite3[675:682])-min((intensite3[675:682]+[108 for x in range(len(intensite[675:682]))])), label='C3')
+plt.plot((shift2[675:682]), (intensite2[675:682]-min((intensite2[675:682]+[916 for x in range(len(intensite[675:682]))]))), label='C4')
+plt.plot((shift[675:682]), (intensite[675:682]-min((intensite[675:682]+[638 for x in range(len(intensite[675:682]))]))), label='C2')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')
@@ -123,7 +127,7 @@ plt.show()
 
 plt.figure()
 plt.gca().invert_xaxis()
-plt.plot((shift4[500:1300]), (intensite4[500:1300]), label='C3')
+plt.plot((shift4[675:682]), (intensite4[675:682]-min((intensite4[675:682]))), label='C3')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')
