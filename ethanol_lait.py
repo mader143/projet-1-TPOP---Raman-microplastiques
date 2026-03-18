@@ -8,7 +8,7 @@ path1 = os.path.join(base_dir, "ethanol_1goutte2.TXT")
 path2 = os.path.join(base_dir, "ethanol_3goutte.TXT")
 path3 = os.path.join(base_dir, "ethanol_5goutte.TXT")
 
-#C2
+#1goutte
 file1 = open(path1, "r")
 line1 = file1.readline()
 
@@ -27,7 +27,7 @@ for line1 in file1:
 pixels = np.array(pixels_données)
 intensite = np.array(intensite_données)
 
-#C4
+#3gouttes
 
 file2 = open(path2, "r")
 line2 = file2.readline()
@@ -46,7 +46,7 @@ for line2 in file2:
 pixels2 = np.array(pixels_données2)
 intensite2 = np.array(intensite_données2)
 
-#C3
+#5gouttes
 
 file3 = open(path3, "r")
 line3 = file3.readline()
@@ -76,9 +76,9 @@ shift = (1/632.8 - 1/longueurs)*10**7
 
 plt.figure()
 plt.gca().invert_xaxis()
-plt.plot((shift3[670:690]), (intensite3[670:690]), label='C3')
-plt.plot((shift2[670:690]), (intensite2[670:690]), label='C4')
-plt.plot((shift[670:690]), (intensite[670:690]), label='C2')
+plt.plot((shift3[500:1300]), (intensite3[500:1300]), label='5 gouttes de lait')
+plt.plot((shift2[500:1300]), (intensite2[500:1300]), label='3 gouttes de lait')
+plt.plot((shift[500:1300]), (intensite[500:1300]), label='1 goutte de lait')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')
