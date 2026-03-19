@@ -88,12 +88,12 @@ shift2 = (1/632.8 - 1/longueurs2)*10**7
 longueurs = 0.0738*pixels + 621.88
 shift = (1/632.8 - 1/longueurs)*10**7
 
-
+#675:682
 plt.figure()
 plt.gca().invert_xaxis()
-plt.plot((shift3[675:682]), (intensite3[675:682]), label='C3')
-plt.plot((shift2[675:682]), (intensite2[675:682]), label='C4')
-plt.plot((shift[675:682]), (intensite[675:682]), label='C2')
+plt.plot((shift3[:1300]), (intensite3[:1300]), label='C3')
+plt.plot((shift2[:1300]), (intensite2[:1300]), label='C4')
+plt.plot((shift[:1300]), (intensite[:1300]), label='C2')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')
