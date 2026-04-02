@@ -76,9 +76,9 @@ shift = (1/632.8 - 1/longueurs)*10**7
 
 plt.figure()
 plt.gca().invert_xaxis()
-plt.plot((shift3[500:1300]), (intensite3[500:1300]), label='Dilué 1/25')
+plt.plot((shift3[500:1300]), (intensite3[500:1300]), label='Dilué 1/2')
 plt.plot((shift2[500:1300]), (intensite2[500:1300]), label='Dilué 1/10')
-plt.plot((shift[500:1300]), (intensite[500:1300]), label='Dilué 1/2')
+plt.plot((shift[500:1300]), (intensite[500:1300]), label='Dilué 1/25')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')

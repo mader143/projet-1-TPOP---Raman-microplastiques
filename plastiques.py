@@ -3,31 +3,9 @@ import matplotlib.pyplot as plt
 import os
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-path1 = os.path.join(base_dir, "essai_10min_C2.TXT")
-path2 = os.path.join(base_dir, "essai_10min_C4.TXT")
-path3 = os.path.join(base_dir, "essai_10min_C3_essai2.TXT")
-path4 = os.path.join(base_dir, "eau_lait_c2.TXT")
-
-file4 = open(path1, "r")
-line4 = file4.readline()
-
-pixels_données4 = []
-intensite_données4 = []
-
-i = 0
-for line4 in file4:
-    i += 1
-    if i > 0:
-        words = line4.split(",")
-        if len(words) == 3:
-            pixels_données4.append(float(words[1]))
-            intensite_données4.append(float(words[2].replace('\n', '')))
-
-pixels4 = np.array(pixels_données4)
-intensite4 = np.array(intensite_données4)
-
-longueurs4 = 0.0738*pixels4 + 621.88
-shift4 = (1/632.8 - 1/longueurs4)*10**7
+path1 = os.path.join(base_dir, "2micro.TXT")
+path2 = os.path.join(base_dir, "20micro.TXT")
+path3 = os.path.join(base_dir, "200micro.TXT")
 
 #C2
 file1 = open(path1, "r")
@@ -86,6 +64,23 @@ for line3 in file3:
 pixels3 = np.array(pixels_données3)
 intensite3 = np.array(intensite_données3)
 
+# #premier pic
+# print('premier pic')
+# print(np.where(intensite == max(intensite[600:800]))[0])
+# print(max(intensite[600:800]))
+# #deuxieme pic
+# print('deuxieme pic')
+# print(np.where(intensite == max(intensite[800:1000]))[0])
+# print(max(intensite[800:1000]))
+# #troisieme pic
+# print('troisieme pic')
+# print(np.where(intensite == max(intensite[1166:1175]))[0])
+# print(max(intensite[1166:1175]))
+# #quatrieme pic
+# print('quatrieme pic')
+# print(np.where(intensite == max(intensite[1175:1193]))[0])
+# print(max(intensite[1175:1193]))
+
 longueurs3 = 0.0738*pixels3 + 621.88
 shift3 = (1/632.8 - 1/longueurs3)*10**7
 longueurs2 = 0.0738*pixels2 + 621.88
@@ -94,18 +89,11 @@ longueurs = 0.0738*pixels + 621.88
 shift = (1/632.8 - 1/longueurs)*10**7
 
 #675:682
-plt.subplot(1,2,1)
-plt.plot((shift3), (intensite3), label='$10^7$ particules/ml', color='red')
-plt.plot((shift2), (intensite2), label='$5\cdot10^7$ particules/ml', color='orange')
-plt.plot((shift), (intensite), label='$10^8$ particules/ml', color='green')
-plt.legend()
-plt.xlabel('Raman shift [$cm^{-1}$]')
-plt.ylabel('Intensité [u. ar.]')
-plt.subplot(1,2,2)
-plt.plot((shift3[675:682]), (intensite3[675:682]), label='$10^7$ particules/ml', color='red')
-plt.plot((shift2[675:682]), (intensite2[675:682]), label='$5\cdot10^7$ particules/ml', color='orange')
-plt.plot((shift[675:682]), (intensite[675:682]), label='$10^8$ particules/ml', color='green')
-plt.plot((shift4[675:682]), (intensite4[675:682]), label='Lait et eau', color='purple')
+plt.figure()
+plt.gca().invert_xaxis()
+plt.plot((shift3[:1300]), (intensite3[:1300]), label='200 microlitres')
+plt.plot((shift2[:1300]), (intensite2[:1300]), label='20 microlitres')
+plt.plot((shift[:1300]), (intensite[:1300]), label='2 microlitres')
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
 plt.ylabel('Intensité [u. ar.]')

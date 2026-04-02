@@ -2,84 +2,72 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-
+# 1. Configuration des chemins
 base_dir = os.path.dirname(os.path.abspath(__file__))
-path1 = os.path.join(base_dir, "ethanol_1goutte2.TXT")
-path2 = os.path.join(base_dir, "ethanol_3goutte.TXT")
-path3 = os.path.join(base_dir, "ethanol_5goutte.TXT")
+paths = [
+    os.path.join(base_dir, "ethanol_1goutte2.TXT"),
+    os.path.join(base_dir, "ethanol_3goutte.TXT"),
+    os.path.join(base_dir, "ethanol_5goutte.TXT")
+]
 
-#1goutte
-file1 = open(path1, "r")
-line1 = file1.readline()
+def load_data(path):
+    pixels, intensite = [], []
+    if not os.path.exists(path):
+        print(f"Fichier introuvable : {path}")
+        return np.array([]), np.array([])
+    with open(path, "r") as f:
+        next(f)  # Sauter l'en-tête
+        for line in f:
+            words = line.split(",")
+            if len(words) == 3:
+                pixels.append(float(words[1]))
+                intensite.append(float(words[2]))
+    return np.array(pixels), np.array(intensite)
 
-pixels_données = []
-intensite_données = []
+# 2. Chargement des données brutes
+px1, int1 = load_data(paths[0])
+px2, int2 = load_data(paths[1])
+px3, int3 = load_data(paths[2])
 
-i = 0
-for line1 in file1:
-    i += 1
-    if i > 0:
-        words = line1.split(",")
-        if len(words) == 3:
-            pixels_données.append(float(words[1]))
-            intensite_données.append(float(words[2].replace('\n', '')))
+# 3. Calcul du Shift Raman
+def get_shift(px):
+    if px.size == 0: return px
+    longueurs = 0.0738 * px + 621.88
+    return (1/632.8 - 1/longueurs) * 10**7
 
-pixels = np.array(pixels_données)
-intensite = np.array(intensite_données)
+shift1, shift2, shift3 = get_shift(px1), get_shift(px2), get_shift(px3)
 
-#3gouttes
+# 4. Sélection de la plage de visualisation [1200:1300]
+start, end = 1200, 1300
 
-file2 = open(path2, "r")
-line2 = file2.readline()
-pixels_données2 = []
-intensite_données2 = []
+# Extraction des segments pour le calcul du min/max
+seg1 = int1[start:end]
+seg2 = int2[start:end]
+seg3 = int3[start:end]
 
-i = 0
-for line2 in file2:
-    i += 1
-    if i > 0:
-        words = line2.split(",")
-        if len(words) == 3:
-            pixels_données2.append(float(words[1]))
-            intensite_données2.append(float(words[2].replace('\n', '')))
+# 5. NORMALISATION GLOBALE (basée sur la zone affichée)
+# On fusionne les trois segments pour trouver les bornes 0 et 1 de la zone
+tous_segments = np.concatenate([seg1, seg2, seg3])
+global_min = np.min(tous_segments)
+global_max = np.max(tous_segments)
 
-pixels2 = np.array(pixels_données2)
-intensite2 = np.array(intensite_données2)
+# Application de la normalisation 0-1 sur les segments
+int1_norm = (seg1 - global_min) / (global_max - global_min)
+int2_norm = (seg2 - global_min) / (global_max - global_min)
+int3_norm = (seg3 - global_min) / (global_max - global_min)
 
-#5gouttes
+# 6. Affichage
+plt.figure(figsize=(10, 6))
 
-file3 = open(path3, "r")
-line3 = file3.readline()
-pixels_données3 = []
-intensite_données3 = []
+plt.plot(shift3[start:end], int3_norm, label='5 gouttes de lait', color='cornflowerblue', linewidth=2.5)
+plt.plot(shift2[start:end], int2_norm, label='3 gouttes de lait', color='violet', linewidth=2.5)
+plt.plot(shift1[start:end], int1_norm, label='1 goutte de lait', color='lightcoral', linewidth=2.5)
 
-i = 0
-for line3 in file3:
-    i += 1
-    if i > 0:
-        words = line3.split(",")
-        if len(words) == 3:
-            pixels_données3.append(float(words[1]))
-            intensite_données3.append(float(words[2].replace('\n', '')))
-
-pixels3 = np.array(pixels_données3)
-intensite3 = np.array(intensite_données3)
-
-longueurs3 = 0.0738*pixels3 + 621.88
-shift3 = (1/632.8 - 1/longueurs3)*10**7
-longueurs2 = 0.0738*pixels2 + 621.88
-shift2 = (1/632.8 - 1/longueurs2)*10**7
-longueurs = 0.0738*pixels + 621.88
-shift = (1/632.8 - 1/longueurs)*10**7
-
-#ajout de code pour normalisation?
-
-plt.figure()
-plt.gca().invert_xaxis()
-plt.plot((shift3[500:1300]), (intensite3[500:1300]), label='5 gouttes de lait')
-plt.plot((shift2[500:1300]), (intensite2[500:1300]), label='3 gouttes de lait')
-plt.plot((shift[500:1300]), (intensite[500:1300]), label='1 goutte de lait')
+# Configuration des axes
+plt.ylim(-0.02, 1.02) # Pour bien voir le 0 et le 1
 plt.legend()
 plt.xlabel('Raman shift [$cm^{-1}$]')
-plt.ylabel('Intensité [u. ar.]')
+plt.ylabel('Intensité normalisée [u. arb.]')
+plt.grid(True, alpha=0.3)
+
 plt.show()

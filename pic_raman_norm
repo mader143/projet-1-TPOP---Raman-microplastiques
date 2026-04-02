@@ -1,0 +1,80 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import os
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+path1 = os.path.join(base_dir, "essai_10min_C2.TXT")
+path2 = os.path.join(base_dir, "essai_10min_C4.TXT")
+path3 = os.path.join(base_dir, "essai_10min_C3_essai2.TXT")
+path4 = os.path.join(base_dir, "eau_lait_c2.TXT")
+
+def load_and_normalize(path):
+    p_list, i_list = [], []
+    with open(path, "r") as f:
+        next(f)
+        for line in f:
+            words = line.split(",")
+            if len(words) == 3:
+                p_list.append(float(words[1]))
+                i_list.append(float(words[2].replace('\n', '')))
+    
+    p = np.array(p_list)
+    i = np.array(i_list)
+    i_norm = (i - np.min(i)) / (np.max(i) - np.min(i))
+    return p, i_norm
+
+# Chargement
+pixels, intensite = load_and_normalize(path1)
+pixels2, intensite2 = load_and_normalize(path2)
+pixels3, intensite3 = load_and_normalize(path3)
+pixels4, intensite4 = load_and_normalize(path4)
+
+def get_shift(p):
+    longueurs = 0.0738 * p + 621.88
+    return (1/632.8 - 1/longueurs) * 10**7
+
+shift, shift2, shift3, shift4 = map(get_shift, [pixels, pixels2, pixels3, pixels4])
+
+fig, ax = plt.subplots(figsize=(6, 4))
+
+# Subplot 1: Normalisation globale
+cercle = Ellipse((925, 0.05), 50, 0.15, color='red', fill=False, linewidth=2)
+ax.add_patch(cercle)
+plt.annotate('a)', (-300, 0.97), fontsize=15)
+plt.annotate("", xy=(1200, 0.3), xytext=(925, 0.13),
+            arrowprops=dict(arrowstyle="->",
+                            connectionstyle="arc3,rad=-0.1",
+                            color="red", lw=1.5))
+ax.plot(shift3, intensite3, label='$10^7$ part./ml', color='purple')
+ax.plot(shift2, intensite2, label='$5\cdot10^7$ part./ml', color='orange')
+ax.plot(shift, intensite, label='$10^8$ part./ml', color='green')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xlabel('Raman shift [$cm^{-1}$]')
+plt.ylabel('Intensité normalisée [u. arb.]')
+
+ax_ins = inset_axes(ax, width="30%", height="30%", loc='center right', borderpad=2)
+# Subplot 2: Alignement sur baseline locale (0)
+indices = slice(675, 682)
+
+def plot_baseline(s, i, lbl, clr):
+    segment = i[indices]
+    
+    i_norm = (segment - np.min(segment)) / (np.max(segment) - np.min(segment))
+    
+    ax_ins.plot(s[indices], i_norm, label=lbl, color=clr)
+
+plot_baseline(shift3, intensite3, '$10^7$ part./ml', 'purple')
+plot_baseline(shift2, intensite2, '$5\cdot10^7$ part./ml', 'orange')
+plot_baseline(shift, intensite, '$10^8$ part./ml', 'green')
+plot_baseline(shift4, intensite4, 'Lait et eau', 'black')
+
+# plt.legend()
+ax_ins.annotate('b)', (918.2, 0.9), fontsize=8)
+# plt.xlabel('Raman shift [$cm^{-1}$]')
+# plt.ylabel('Intensité relative [u. arb.]')
+
+# plt.tight_layout()
+plt.show()
